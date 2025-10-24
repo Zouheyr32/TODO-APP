@@ -5,6 +5,7 @@ Main application entry point
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from app.routes import tasks, metrics
 
 # Create FastAPI application instance
 app = FastAPI(
@@ -23,6 +24,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+# Include routers
+app.include_router(tasks.router)
+app.include_router(metrics.router)
 
 @app.get("/")
 async def root():
