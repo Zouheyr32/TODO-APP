@@ -1,233 +1,298 @@
-# TODO List Application
+# TODO App - Full Stack Application
 
-A full-stack TODO list application built with FastAPI backend and Next.js frontend, featuring a modern admin dashboard interface.
-
-## 📋 Project Overview
-
-This project is a comprehensive TODO list management system with:
-
-- **Backend**: FastAPI with SQLAlchemy ORM and MySQL database
-- **Frontend**: Next.js 13+ with Redux Toolkit and Spike Admin Template
-- **Features**: Complete CRUD operations, bulk actions, and analytics dashboard
+A comprehensive TODO list management application built with FastAPI backend and Next.js frontend, featuring task management, analytics dashboard, and modern UI/UX.
 
 ## 🚀 Technologies Used
 
 ### Backend
 
-- **FastAPI**: Modern, fast web framework for building APIs
-- **SQLAlchemy**: SQL toolkit and ORM for Python
-- **MySQL**: Relational database management system
-- **Alembic**: Database migration tool
-- **Pydantic**: Data validation using Python type annotations
-- **Uvicorn**: ASGI server implementation
+- **FastAPI** - Modern, fast web framework for building APIs
+- **SQLAlchemy** - SQL toolkit and Object-Relational Mapping (ORM) library
+- **MySQL** - Relational database management system
+- **Alembic** - Database migration tool for SQLAlchemy
+- **Pydantic** - Data validation using Python type annotations
+- **Uvicorn** - ASGI server for running FastAPI applications
+- **python-dotenv** - Load environment variables from .env files
 
 ### Frontend
 
-- **Next.js**: React framework with server-side rendering
-- **Redux Toolkit**: State management library
-- **TypeScript**: Typed superset of JavaScript
-- **Spike Template**: Professional admin dashboard template
-- **Axios**: Promise-based HTTP client
+- **Next.js 13+** - React framework with App Router
+- **TypeScript** - Typed JavaScript for better development experience
+- **Material-UI (MUI)** - React component library for UI
+- **Redux Toolkit** - State management library
+- **Axios** - HTTP client for API requests
+- **Spike Next.js Free Admin Template** - Professional admin dashboard template
 
 ## 📁 Project Structure
 
 ```
-todo-app/
-├── backend/                    # FastAPI backend application
+TODO-APP/
+├── backend/
 │   ├── app/
-│   │   ├── models/            # SQLAlchemy database models
-│   │   ├── schemas/           # Pydantic schemas for validation
-│   │   ├── services/          # Business logic layer
-│   │   ├── routes/            # API endpoints
-│   │   └── db/                # Database configuration
-│   ├── alembic/               # Database migrations
-│   ├── main.py                # FastAPI application entry point
-│   ├── requirements.txt       # Python dependencies
-│   └── .env.example           # Environment variables template
-│
-├── frontend/                   # Next.js frontend application
-│   ├── app/                   # Next.js 13+ app router
-│   │   ├── dashboard/         # Dashboard page
-│   │   └── tasks/             # Tasks management page
-│   ├── components/            # React components
-│   │   ├── tasks/             # Task-related components
-│   │   └── dashboard/         # Dashboard components
-│   ├── store/                 # Redux store configuration
-│   │   └── slices/            # Redux slices
-│   ├── services/              # API service layer
-│   └── package.json           # Node.js dependencies
-│
-└── README.md                   # This file
+│   │   ├── db/
+│   │   │   └── database.py          # Database configuration
+│   │   ├── models/
+│   │   │   └── task.py              # SQLAlchemy models
+│   │   ├── schemas/
+│   │   │   ├── task.py              # Pydantic schemas for tasks
+│   │   │   ├── metrics.py           # Pydantic schemas for metrics
+│   │   │   └── common.py            # Common response schemas
+│   │   ├── services/
+│   │   │   ├── task_service.py      # Business logic for tasks
+│   │   │   └── metrics_service.py   # Business logic for metrics
+│   │   ├── routes/
+│   │   │   ├── tasks.py             # Task API endpoints
+│   │   │   └── metrics.py           # Metrics API endpoints
+│   │   └── main.py                  # FastAPI application entry point
+│   ├── alembic/                     # Database migrations
+│   ├── requirements.txt              # Python dependencies
+│   └── .env.example                  # Environment variables template
+├── frontend/
+│   ├── src/
+│   │   ├── app/                     # Next.js App Router pages
+│   │   │   ├── (DashboardLayout)/
+│   │   │   │   ├── dashboard/       # Dashboard page
+│   │   │   │   └── tasks/           # Tasks management page
+│   │   │   └── layout.tsx           # Root layout
+│   │   ├── components/              # Reusable React components
+│   │   │   ├── ErrorBoundary.tsx    # Error boundary component
+│   │   │   ├── LoadingSpinner.tsx    # Loading component
+│   │   │   └── NotificationProvider.tsx # Notification system
+│   │   ├── store/                   # Redux store configuration
+│   │   │   ├── index.ts             # Store setup
+│   │   │   ├── slices/              # Redux slices
+│   │   │   └── StoreProvider.tsx    # Store provider
+│   │   ├── services/                # API service layer
+│   │   │   ├── api.ts               # Axios configuration
+│   │   │   ├── taskService.ts       # Task API service
+│   │   │   └── metricsService.ts    # Metrics API service
+│   │   ├── hooks/                   # Custom React hooks
+│   │   │   ├── useTasks.ts          # Task management hooks
+│   │   │   └── useMetrics.ts        # Metrics hooks
+│   │   └── utils/                   # Utility functions
+│   ├── package.json                 # Node.js dependencies
+│   └── .env.local                   # Frontend environment variables
+└── README.md                        # Project documentation
 ```
 
 ## ✨ Features
 
-### Task Management
+### Backend Features
 
-- ✅ **Create Tasks**: Add new tasks with title and description
-- ✅ **View Tasks**: Display all tasks in an organized table
-- ✅ **Edit Tasks**: Modify existing task details
-- ✅ **Delete Tasks**: Remove individual tasks
-- ✅ **Bulk Delete**: Select and delete multiple tasks at once
+- **RESTful API** - Complete CRUD operations for tasks
+- **Soft Delete** - Tasks are marked as deleted but preserved in database
+- **Modification Tracking** - Track how many times a task has been modified
+- **Database Migrations** - Alembic for database schema management
+- **Data Validation** - Pydantic schemas for request/response validation
+- **Metrics API** - Analytics endpoints for dashboard data
+- **Error Handling** - Comprehensive error responses
+- **CORS Support** - Cross-origin resource sharing configuration
 
-### Dashboard Analytics
+### Frontend Features
 
-- 📊 **Total Tasks**: Display the total number of tasks created
-- 📝 **Modified Tasks**: Show count of tasks that have been edited
-- 🗑️ **Deleted Tasks**: Track the number of deleted tasks
+- **Task Management** - Create, read, update, delete tasks
+- **Bulk Operations** - Select and delete multiple tasks
+- **Search & Filtering** - Advanced task filtering capabilities
+- **Dashboard Analytics** - Visual metrics and productivity tracking
+- **Responsive Design** - Mobile-friendly interface
+- **Real-time Updates** - Optimistic UI updates
+- **Error Handling** - User-friendly error messages
+- **Loading States** - Proper loading indicators
+- **Modern UI** - Professional admin dashboard design
 
-## 🛠️ Prerequisites
+## 🛠️ Installation & Setup
 
-Before you begin, ensure you have the following installed:
+### Prerequisites
 
-- **Python 3.8+**: [Download Python](https://www.python.org/downloads/)
-- **Node.js 16+**: [Download Node.js](https://nodejs.org/)
-- **MySQL 8.0+**: [Download MySQL](https://dev.mysql.com/downloads/)
-- **Git**: [Download Git](https://git-scm.com/downloads/)
+- Python 3.8+
+- Node.js 18+
+- MySQL 8.0+
+- Git
 
-## 📦 Installation & Setup
+### Backend Setup
 
-### 1. Clone the Repository
+1. **Clone the repository**
 
-```bash
-git clone <repository-url>
-cd todo-app
+   ```bash
+   git clone <repository-url>
+   cd TODO-APP/backend
+   ```
+
+2. **Create virtual environment**
+
+   ```bash
+   python -m venv venv
+   source venv/bin/activate  # On Windows: venv\Scripts\activate
+   ```
+
+3. **Install dependencies**
+
+   ```bash
+   pip install -r requirements.txt
+   ```
+
+4. **Configure environment variables**
+
+   ```bash
+   cp .env.example .env
+   # Edit .env with your database credentials
+   ```
+
+5. **Setup database**
+
+   ```bash
+   # Create MySQL database
+   mysql -u root -p
+   CREATE DATABASE todo_db;
+
+   # Run migrations
+   alembic upgrade head
+   ```
+
+6. **Start the server**
+   ```bash
+   uvicorn main:app --reload
+   ```
+
+### Frontend Setup
+
+1. **Navigate to frontend directory**
+
+   ```bash
+   cd ../frontend
+   ```
+
+2. **Install dependencies**
+
+   ```bash
+   npm install
+   ```
+
+3. **Configure environment variables**
+
+   ```bash
+   cp .env.local.example .env.local
+   # Edit .env.local with your API URL
+   ```
+
+4. **Start the development server**
+   ```bash
+   npm run dev
+   ```
+
+## 📚 API Documentation
+
+### Base URL
+
+```
+http://localhost:8000
 ```
 
-### 2. Backend Setup
+### Task Endpoints
 
-#### 2.1 Navigate to Backend Directory
+#### Get All Tasks
 
-```bash
-cd backend
+```http
+GET /tasks?skip=0&limit=100
 ```
 
-#### 2.2 Create Virtual Environment
+#### Get Task by ID
 
-```bash
-# Windows
-python -m venv venv
-venv\Scripts\activate
-
-# Linux/Mac
-python3 -m venv venv
-source venv/bin/activate
+```http
+GET /tasks/{task_id}
 ```
 
-#### 2.3 Install Dependencies
+#### Create Task
 
-```bash
-pip install -r requirements.txt
+```http
+POST /tasks
+Content-Type: application/json
+
+{
+  "title": "Task Title",
+  "description": "Task Description",
+  "is_completed": false
+}
 ```
 
-#### 2.4 Configure Database
+#### Update Task
 
-1. Create a MySQL database:
+```http
+PUT /tasks/{task_id}
+Content-Type: application/json
 
-```sql
-CREATE DATABASE todo_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+{
+  "title": "Updated Title",
+  "description": "Updated Description",
+  "is_completed": true
+}
 ```
 
-2. Copy `.env.example` to `.env` and update with your database credentials:
+#### Delete Task
 
-```bash
-cp .env.example .env
+```http
+DELETE /tasks/{task_id}
 ```
 
-3. Edit `.env` file:
+#### Bulk Delete Tasks
 
-```env
-DATABASE_URL=mysql+pymysql://username:password@localhost:3306/todo_db
+```http
+DELETE /tasks/bulk
+Content-Type: application/json
+
+{
+  "task_ids": [1, 2, 3]
+}
 ```
 
-#### 2.5 Run Database Migrations
+#### Search Tasks
 
-```bash
-alembic upgrade head
+```http
+GET /tasks/search?title=search_term&is_completed=true&page=1&size=10
 ```
 
-#### 2.6 Start Backend Server
+### Metrics Endpoints
 
-```bash
-uvicorn main:app --reload --host 0.0.0.0 --port 8000
+#### Get Dashboard Metrics
+
+```http
+GET /metrics
 ```
 
-The API will be available at `http://localhost:8000`
-API documentation (Swagger UI) at `http://localhost:8000/docs`
+#### Get Task Statistics
 
-### 3. Frontend Setup
-
-#### 3.1 Navigate to Frontend Directory
-
-```bash
-cd ../frontend
+```http
+GET /metrics/stats
 ```
-
-#### 3.2 Install Dependencies
-
-```bash
-npm install
-# or
-yarn install
-```
-
-#### 3.3 Configure API Endpoint
-
-Create `.env.local` file:
-
-```env
-NEXT_PUBLIC_API_URL=http://localhost:8000
-```
-
-#### 3.4 Start Development Server
-
-```bash
-npm run dev
-# or
-yarn dev
-```
-
-The application will be available at `http://localhost:3000`
-
-## 🔌 API Endpoints
-
-### Tasks
-
-- `GET /tasks` - Get all tasks
-- `GET /tasks/{id}` - Get a specific task
-- `POST /tasks` - Create a new task
-- `PUT /tasks/{id}` - Update a task
-- `DELETE /tasks/{id}` - Delete a task
-- `DELETE /tasks/bulk` - Delete multiple tasks
-
-### Metrics
-
-- `GET /metrics` - Get dashboard metrics (total, modified, deleted counts)
 
 ## 🏗️ Architecture
 
 ### Backend Architecture
 
-```
-Routes (API Layer)
-    ↓
-Services (Business Logic)
-    ↓
-Models (Data Layer)
-    ↓
-Database (MySQL)
-```
+- **Models** - SQLAlchemy ORM models for database entities
+- **Schemas** - Pydantic models for data validation and serialization
+- **Services** - Business logic layer for complex operations
+- **Routes** - API endpoint definitions and request handling
+- **Database** - SQLAlchemy configuration and session management
 
 ### Frontend Architecture
 
-```
-Pages (UI Layer)
-    ↓
-Components (Reusable UI)
-    ↓
-Redux Store (State Management)
-    ↓
-API Services (HTTP Layer)
-    ↓
-Backend API
-```
+- **Pages** - Next.js App Router pages for different routes
+- **Components** - Reusable React components
+- **Store** - Redux store for state management
+- **Services** - API service layer for backend communication
+- **Hooks** - Custom React hooks for component logic
+
+## 🚀 Deployment
+
+### Backend Deployment
+
+1. Set up production database
+2. Configure environment variables
+3. Run database migrations
+
+### Frontend Deployment
+
+1. Build the application: `npm run build`
+2. Deploy to Vercel, Netlify, or other hosting platform
+3. Configure environment variables
