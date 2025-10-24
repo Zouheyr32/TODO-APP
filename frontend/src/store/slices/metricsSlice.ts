@@ -41,28 +41,28 @@ const initialState: MetricsState = {
   lastUpdated: null,
 };
 
-// Async thunks (will be implemented when API service is ready)
+// Async thunks
 export const fetchMetrics = createAsyncThunk(
   'metrics/fetchMetrics',
   async () => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { MetricsService } = await import('@/services/metricsService');
+    return MetricsService.getMetrics();
   }
 );
 
 export const fetchTaskStats = createAsyncThunk(
   'metrics/fetchTaskStats',
   async () => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { MetricsService } = await import('@/services/metricsService');
+    return MetricsService.getTaskStats();
   }
 );
 
 export const refreshMetrics = createAsyncThunk(
   'metrics/refreshMetrics',
   async () => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { MetricsService } = await import('@/services/metricsService');
+    return MetricsService.refreshMetrics();
   }
 );
 

@@ -74,60 +74,62 @@ const initialState: TasksState = {
   },
 };
 
-// Async thunks (will be implemented when API service is ready)
+// Async thunks
 export const fetchTasks = createAsyncThunk(
   'tasks/fetchTasks',
   async (params: { skip?: number; limit?: number } = {}) => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { TaskService } = await import('@/services/taskService');
+    return TaskService.getTasks(params);
   }
 );
 
 export const fetchTaskById = createAsyncThunk(
   'tasks/fetchTaskById',
   async (taskId: number) => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { TaskService } = await import('@/services/taskService');
+    return TaskService.getTaskById(taskId);
   }
 );
 
 export const createTask = createAsyncThunk(
   'tasks/createTask',
   async (taskData: TaskCreate) => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { TaskService } = await import('@/services/taskService');
+    return TaskService.createTask(taskData);
   }
 );
 
 export const updateTask = createAsyncThunk(
   'tasks/updateTask',
   async ({ id, taskData }: { id: number; taskData: TaskUpdate }) => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { TaskService } = await import('@/services/taskService');
+    return TaskService.updateTask(id, taskData);
   }
 );
 
 export const deleteTask = createAsyncThunk(
   'tasks/deleteTask',
   async (taskId: number) => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { TaskService } = await import('@/services/taskService');
+    await TaskService.deleteTask(taskId);
+    return taskId;
   }
 );
 
 export const bulkDeleteTasks = createAsyncThunk(
   'tasks/bulkDeleteTasks',
   async (taskIds: number[]) => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { TaskService } = await import('@/services/taskService');
+    const result = await TaskService.bulkDeleteTasks(taskIds);
+    return taskIds; // Return the deleted task IDs
   }
 );
 
 export const searchTasks = createAsyncThunk(
   'tasks/searchTasks',
   async (searchParams: TaskSearchParams) => {
-    // This will be implemented when API service is ready
-    throw new Error('API service not implemented yet');
+    const { TaskService } = await import('@/services/taskService');
+    return TaskService.searchTasks(searchParams);
   }
 );
 
