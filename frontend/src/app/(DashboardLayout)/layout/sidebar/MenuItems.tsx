@@ -95,6 +95,13 @@ const Menuitems: MenuitemsType[] = [
 
   {
     id: uniqueId(),
+    title: "Dashboard",
+    icon: "screencast-2-line-duotone",
+    href: "/dashboard",
+  },
+
+  {
+    id: uniqueId(),
     title: "Tasks",
     icon: "checklist-minimalistic-line-duotone",
     href: "/tasks",
