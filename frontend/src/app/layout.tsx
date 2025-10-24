@@ -4,6 +4,7 @@ import { ThemeProvider } from "@mui/material/styles";
 import CssBaseline from "@mui/material/CssBaseline";
 import "./global.css";
 import { DashboardContextProvider } from './context/DashboardContext';
+import { StoreProvider } from '@/store/StoreProvider';
 
 export default function RootLayout({
   children,
@@ -17,13 +18,15 @@ export default function RootLayout({
         <title>Spike Next.js + Ts + Mui</title>
       </head>
       <body>
-        <ThemeProvider theme={baselightTheme}>
-          {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-          <DashboardContextProvider>
-            <CssBaseline />
-            {children}
-          </DashboardContextProvider>
-        </ThemeProvider>
+        <StoreProvider>
+          <ThemeProvider theme={baselightTheme}>
+            {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
+            <DashboardContextProvider>
+              <CssBaseline />
+              {children}
+            </DashboardContextProvider>
+          </ThemeProvider>
+        </StoreProvider>
       </body>
     </html>
   );
