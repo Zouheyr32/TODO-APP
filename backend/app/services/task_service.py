@@ -76,8 +76,7 @@ class TaskService:
         """
         db_task = Task(
             title=task_data.title,
-            description=task_data.description,
-            is_completed=task_data.is_completed
+            description=task_data.description
         )
         self.db.add(db_task)
         self.db.commit()
@@ -167,8 +166,6 @@ class TaskService:
         if search_params.title:
             query = query.filter(Task.title.ilike(f"%{search_params.title}%"))
         
-        if search_params.is_completed is not None:
-            query = query.filter(Task.is_completed == search_params.is_completed)
         
         # Get total count before pagination
         total = query.count()
@@ -187,27 +184,6 @@ class TaskService:
         """
         return self.db.query(Task).filter(Task.is_deleted == False).count()
     
-    def get_completed_tasks_count(self) -> int:
-        """
-        Get count of completed tasks
-        
-        Returns:
-            Number of completed tasks
-        """
-        return self.db.query(Task).filter(
-            and_(Task.is_deleted == False, Task.is_completed == True)
-        ).count()
-    
-    def get_pending_tasks_count(self) -> int:
-        """
-        Get count of pending (incomplete) tasks
-        
-        Returns:
-            Number of pending tasks
-        """
-        return self.db.query(Task).filter(
-            and_(Task.is_deleted == False, Task.is_completed == False)
-        ).count()
     
     def get_deleted_tasks_count(self) -> int:
         """
@@ -250,21 +226,3 @@ class TaskService:
         self.db.commit()
         return True
     
-    def get_tasks_by_completion_status(self, is_completed: bool, skip: int = 0, limit: int = 100) -> List[Task]:
-        """
-        Get tasks filtered by completion status
-        
-        Args:
-            is_completed: Filter by completion status
-            skip: Number of records to skip for pagination
-            limit: Maximum number of records to return
-            
-        Returns:
-            List of tasks matching the completion status
-        """
-        return self.db.query(Task).filter(
-            and_(
-                Task.is_deleted == False,
-                Task.is_completed == is_completed
-            )
-        ).offset(skip).limit(limit).all()

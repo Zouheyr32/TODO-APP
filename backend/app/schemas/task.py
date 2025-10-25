@@ -13,7 +13,6 @@ class TaskBase(BaseModel):
     """
     title: str = Field(..., min_length=1, max_length=255, description="Task title")
     description: Optional[str] = Field(None, description="Task description")
-    is_completed: bool = Field(False, description="Task completion status")
 
 
 class TaskCreate(TaskBase):
@@ -30,7 +29,6 @@ class TaskUpdate(BaseModel):
     """
     title: Optional[str] = Field(None, min_length=1, max_length=255, description="Task title")
     description: Optional[str] = Field(None, description="Task description")
-    is_completed: Optional[bool] = Field(None, description="Task completion status")
     
     class Config:
         # Allow partial updates
@@ -88,7 +86,6 @@ class TaskSearchRequest(BaseModel):
     Schema for task search/filtering
     """
     title: Optional[str] = Field(None, description="Search by title (partial match)")
-    is_completed: Optional[bool] = Field(None, description="Filter by completion status")
     page: int = Field(1, ge=1, description="Page number")
     size: int = Field(10, ge=1, le=100, description="Number of tasks per page")
     
@@ -96,7 +93,6 @@ class TaskSearchRequest(BaseModel):
         json_schema_extra = {
             "example": {
                 "title": "important",
-                "is_completed": False,
                 "page": 1,
                 "size": 10
             }

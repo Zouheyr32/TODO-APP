@@ -32,27 +32,15 @@ class MetricsService:
         """
         # Get basic counts
         total_tasks = self.db.query(Task).filter(Task.is_deleted == False).count()
-        completed_tasks = self.db.query(Task).filter(
-            and_(Task.is_deleted == False, Task.is_completed == True)
-        ).count()
-        pending_tasks = self.db.query(Task).filter(
-            and_(Task.is_deleted == False, Task.is_completed == False)
-        ).count()
         deleted_tasks = self.db.query(Task).filter(Task.is_deleted == True).count()
         modified_tasks = self.db.query(Task).filter(
             and_(Task.is_deleted == False, Task.modification_count > 0)
         ).count()
         
-        # Calculate completion rate
-        completion_rate = (completed_tasks / total_tasks * 100) if total_tasks > 0 else 0.0
-        
         return MetricsResponse(
             total_tasks=total_tasks,
-            completed_tasks=completed_tasks,
-            pending_tasks=pending_tasks,
-            deleted_tasks=deleted_tasks,
             modified_tasks=modified_tasks,
-            completion_rate=round(completion_rate, 2)
+            deleted_tasks=deleted_tasks
         )
     
     def get_task_stats(self) -> TaskStatsResponse:
@@ -64,7 +52,6 @@ class MetricsService:
         """
         # Get total counts
         total_created = self.db.query(Task).count()
-        total_completed = self.db.query(Task).filter(Task.is_completed == True).count()
         total_deleted = self.db.query(Task).filter(Task.is_deleted == True).count()
         
         # Get total modifications across all tasks
@@ -76,9 +63,8 @@ class MetricsService:
         
         return TaskStatsResponse(
             total_created=total_created,
-            total_completed=total_completed,
-            total_deleted=total_deleted,
             total_modified=total_modifications,
+            total_deleted=total_deleted,
             average_modifications=round(average_modifications, 3)
         )
     
