@@ -109,6 +109,70 @@ TODO-APP/
 - MySQL 8.0+
 - Git
 
+### Quick Setup (Recommended)
+
+The easiest way to get started is using our automated setup scripts:
+
+#### For Windows:
+
+```bash
+# Run the Windows setup script
+setup.bat
+```
+
+#### For Linux/Mac:
+
+```bash
+# Make the script executable and run it
+chmod +x setup.sh
+./setup.sh
+```
+
+These scripts will automatically:
+
+- Set up the backend environment and dependencies
+- Set up the frontend environment and dependencies
+- Create necessary configuration files
+- Run database migrations
+- Provide next steps for starting the application
+
+#### After Running Setup Scripts:
+
+1. **Configure Database** (if not already done):
+
+   ```bash
+   # Create MySQL database
+   mysql -u root -p
+   CREATE DATABASE todo_db;
+   ```
+
+2. **Edit Environment Files**:
+
+   - Backend: Update `backend/.env` with your database credentials
+   - Frontend: Update `frontend/.env.local` with your API URL (default: http://localhost:8000)
+
+3. **Start the Application**:
+
+   ```bash
+   # Terminal 1 - Start Backend
+   cd backend
+   source venv/bin/activate  # Windows: venv\Scripts\activate
+   uvicorn main:app --reload
+
+   # Terminal 2 - Start Frontend
+   cd frontend
+   npm run dev
+   ```
+
+4. **Access the Application**:
+   - Frontend: http://localhost:3000
+   - Backend API: http://localhost:8000
+   - API Documentation: http://localhost:8000/docs
+
+### Manual Setup
+
+If you prefer to set up manually or the scripts don't work, follow the steps below:
+
 ### Backend Setup
 
 1. **Clone the repository**
