@@ -99,6 +99,23 @@ TODO-APP/
 - **Loading States** - Proper loading indicators
 - **Modern UI** - Professional admin dashboard design
 
+## 📸 Screenshots
+
+### Dashboard Page
+
+![Dashboard](screenshots/dashboard.png)
+_Main dashboard showing task metrics and analytics_
+
+### Tasks Management Page
+
+![Tasks](screenshots/tasks.png)
+_Task management interface with create, edit, delete, and bulk operations_
+
+### Task Creation Modal
+
+![Task Form](screenshots/task-form.png)
+_Modal for creating and editing tasks_
+
 ## 🛠️ Installation & Setup
 
 ### Prerequisites
