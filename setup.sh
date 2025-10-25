@@ -104,21 +104,64 @@ setup_frontend() {
     cd ..
 }
 
-# Setup database
-setup_database() {
-    print_status "Setting up database..."
+# Setup MySQL database
+setup_mysql() {
+    print_status "Setting up MySQL database..."
     
-    cd backend
+    echo ""
+    echo "=== MySQL Database Setup ==="
+    echo "Please provide your MySQL credentials to create the database."
+    echo ""
     
-    # Activate virtual environment
-    source venv/bin/activate
+    read -p "MySQL Host [localhost]: " DB_HOST
+    DB_HOST=${DB_HOST:-localhost}
     
-    # Run migrations
-    print_status "Running database migrations..."
-    alembic upgrade head
+    read -p "MySQL Port [3306]: " DB_PORT
+    DB_PORT=${DB_PORT:-3306}
     
-    print_success "Database setup completed"
-    cd ..
+    read -p "MySQL Username [root]: " DB_USER
+    DB_USER=${DB_USER:-root}
+    
+    read -sp "MySQL Password: " DB_PASSWORD
+    echo ""
+    
+    read -p "Database Name [todo_db]: " DB_NAME
+    DB_NAME=${DB_NAME:-todo_db}
+    
+    # Test MySQL connection and create database
+    print_status "Testing MySQL connection..."
+    if mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASSWORD" -e "SELECT 1;" > /dev/null 2>&1; then
+        print_success "MySQL connection successful!"
+        
+        # Create database if not exists
+        print_status "Creating database '$DB_NAME' if it doesn't exist..."
+        mysql -h"$DB_HOST" -P"$DB_PORT" -u"$DB_USER" -p"$DB_PASSWORD" -e "CREATE DATABASE IF NOT EXISTS $DB_NAME CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;"
+        print_success "Database '$DB_NAME' is ready!"
+        
+        # Create .env file
+        print_status "Creating backend/.env file..."
+        echo "DATABASE_URL=mysql+pymysql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME" > backend/.env
+        print_success "Created backend/.env file"
+        
+        # Run migrations
+        print_status "Running database migrations..."
+        cd backend
+        source venv/bin/activate
+        alembic upgrade head
+        cd ..
+        print_success "Database migrations completed!"
+    else
+        print_error "MySQL connection failed!"
+        echo ""
+        echo "Please check:"
+        echo "  1. MySQL is running"
+        echo "  2. Credentials are correct"
+        echo "  3. MySQL is accessible on $DB_HOST:$DB_PORT"
+        echo ""
+        echo "You can manually create the .env file later:"
+        echo "  DATABASE_URL=mysql+pymysql://$DB_USER:$DB_PASSWORD@$DB_HOST:$DB_PORT/$DB_NAME"
+        exit 1
+    fi
 }
 
 # Main setup function
@@ -135,17 +178,16 @@ main() {
     # Setup frontend
     setup_frontend
     
-    # Setup database
-    setup_database
+    # Setup MySQL database
+    setup_mysql
     
     echo ""
     print_success "🎉 Setup completed successfully!"
     echo ""
     echo "📋 Next steps:"
-    echo "1. Edit backend/.env with your database credentials"
-    echo "2. Start the backend server: cd backend && source venv/bin/activate && uvicorn main:app --reload"
-    echo "3. Start the frontend server: cd frontend && npm run dev"
-    echo "4. Open http://localhost:3000 in your browser"
+    echo "1. Start the backend server: cd backend && source venv/bin/activate && python main.py"
+    echo "2. Start the frontend server: cd frontend && npm run dev"
+    echo "3. Open http://localhost:3000 in your browser"
     echo ""
     echo "📚 For more information, see README.md"
 }
