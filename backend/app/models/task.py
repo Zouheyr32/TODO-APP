@@ -31,7 +31,6 @@ class Task(Base):
     description = Column(Text, nullable=True)
     
     # Status flags
-    is_completed = Column(Boolean, default=False, nullable=False)
     is_deleted = Column(Boolean, default=False, nullable=False, index=True)
     
     # Tracking fields
@@ -43,7 +42,7 @@ class Task(Base):
     
     def __repr__(self):
         """String representation of the Task model"""
-        return f"<Task(id={self.id}, title='{self.title}', is_completed={self.is_completed}, is_deleted={self.is_deleted})>"
+        return f"<Task(id={self.id}, title='{self.title}', is_deleted={self.is_deleted})>"
     
     def to_dict(self):
         """Convert task instance to dictionary"""
@@ -51,7 +50,6 @@ class Task(Base):
             "id": self.id,
             "title": self.title,
             "description": self.description,
-            "is_completed": self.is_completed,
             "is_deleted": self.is_deleted,
             "modification_count": self.modification_count,
             "created_at": self.created_at,

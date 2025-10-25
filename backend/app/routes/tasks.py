@@ -50,7 +50,6 @@ async def search_tasks(
     Search and filter tasks with advanced criteria
     
     - **title**: Search by task title (partial match)
-    - **is_completed**: Filter by completion status
     - **page**: Page number (starts from 1)
     - **size**: Number of tasks per page (1-100)
     """
@@ -97,7 +96,6 @@ async def create_task(
     
     - **title**: Task title (required, 1-255 characters)
     - **description**: Task description (optional)
-    - **is_completed**: Completion status (default: false)
     """
     task_service = TaskService(db)
     task = task_service.create_task(task_data)
@@ -116,7 +114,6 @@ async def update_task(
     - **task_id**: The ID of the task to update
     - **title**: New task title (optional)
     - **description**: New task description (optional)
-    - **is_completed**: New completion status (optional)
     
     Note: This operation will increment the modification count
     """
@@ -154,7 +151,7 @@ async def delete_task(
         )
 
 
-@router.delete("/bulk", response_model=BulkDeleteResponse, summary="Bulk delete tasks")
+@router.post("/bulk", response_model=BulkDeleteResponse, summary="Bulk delete tasks")
 async def bulk_delete_tasks(
     delete_request: BulkDeleteRequest,
     db: Session = Depends(get_db)
@@ -175,38 +172,6 @@ async def bulk_delete_tasks(
     )
 
 
-@router.get("/completed/list", response_model=List[TaskResponse], summary="Get completed tasks")
-async def get_completed_tasks(
-    skip: int = Query(0, ge=0, description="Number of tasks to skip"),
-    limit: int = Query(100, ge=1, le=1000, description="Number of tasks to return"),
-    db: Session = Depends(get_db)
-):
-    """
-    Retrieve all completed tasks
-    
-    - **skip**: Number of tasks to skip (for pagination)
-    - **limit**: Maximum number of tasks to return (1-1000)
-    """
-    task_service = TaskService(db)
-    tasks = task_service.get_tasks_by_completion_status(is_completed=True, skip=skip, limit=limit)
-    return tasks
-
-
-@router.get("/pending/list", response_model=List[TaskResponse], summary="Get pending tasks")
-async def get_pending_tasks(
-    skip: int = Query(0, ge=0, description="Number of tasks to skip"),
-    limit: int = Query(100, ge=1, le=1000, description="Number of tasks to return"),
-    db: Session = Depends(get_db)
-):
-    """
-    Retrieve all pending (incomplete) tasks
-    
-    - **skip**: Number of tasks to skip (for pagination)
-    - **limit**: Maximum number of tasks to return (1-1000)
-    """
-    task_service = TaskService(db)
-    tasks = task_service.get_tasks_by_completion_status(is_completed=False, skip=skip, limit=limit)
-    return tasks
 
 
 @router.post("/{task_id}/restore", response_model=TaskResponse, summary="Restore deleted task")

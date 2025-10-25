@@ -19,11 +19,8 @@ async def get_metrics(db: Session = Depends(get_db)):
     Get comprehensive dashboard metrics including:
     
     - **total_tasks**: Total number of active tasks
-    - **completed_tasks**: Number of completed tasks
-    - **pending_tasks**: Number of pending tasks
-    - **deleted_tasks**: Number of soft-deleted tasks
     - **modified_tasks**: Number of tasks that have been modified
-    - **completion_rate**: Task completion rate as percentage
+    - **deleted_tasks**: Number of soft-deleted tasks
     """
     metrics_service = MetricsService(db)
     metrics = metrics_service.get_metrics()
@@ -36,7 +33,6 @@ async def get_task_stats(db: Session = Depends(get_db)):
     Get detailed task statistics including:
     
     - **total_created**: Total number of tasks ever created
-    - **total_completed**: Total number of completed tasks
     - **total_deleted**: Total number of deleted tasks
     - **total_modified**: Total number of modifications across all tasks
     - **average_modifications**: Average modifications per task
@@ -88,7 +84,6 @@ async def get_productivity_metrics(db: Session = Depends(get_db)):
     Get productivity-related metrics including:
     
     - **tasks_created_today**: Number of tasks created today
-    - **tasks_completed_today**: Number of tasks completed today
     - **average_task_lifetime**: Average time from creation to completion
     - **most_active_hour**: Hour with most task activity
     """
