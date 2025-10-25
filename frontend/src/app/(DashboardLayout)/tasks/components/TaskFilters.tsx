@@ -34,7 +34,6 @@ interface TaskFiltersProps {
 
 interface FilterState {
   title: string;
-  is_completed: string;
   page: number;
   size: number;
 }
@@ -43,7 +42,6 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onClose }) => {
   const { searchParams, performSearch, clearSearch } = useTaskSearch();
   const [filters, setFilters] = useState<FilterState>({
     title: "",
-    is_completed: "",
     page: 1,
     size: 10,
   });
@@ -53,10 +51,6 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onClose }) => {
   useEffect(() => {
     setFilters({
       title: searchParams.title || "",
-      is_completed:
-        searchParams.is_completed !== undefined
-          ? searchParams.is_completed.toString()
-          : "",
       page: searchParams.page || 1,
       size: searchParams.size || 10,
     });
@@ -75,12 +69,7 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onClose }) => {
 
   // Handle search
   const handleSearch = () => {
-    const searchData = {
-      ...filters,
-      is_completed: filters.is_completed
-        ? filters.is_completed === "true"
-        : undefined,
-    };
+    const searchData = { ...filters };
 
     // Remove empty values
     Object.keys(searchData).forEach((key) => {
@@ -96,7 +85,6 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onClose }) => {
   const handleClearFilters = () => {
     setFilters({
       title: "",
-      is_completed: "",
       page: 1,
       size: 10,
     });
@@ -104,16 +92,9 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onClose }) => {
   };
 
   // Handle quick filters
-  const handleQuickFilter = (type: "all" | "completed" | "pending") => {
-    const quickFilters = {
-      all: { is_completed: "" },
-      completed: { is_completed: "true" },
-      pending: { is_completed: "false" },
-    };
-
+  const handleQuickFilter = (type: "all") => {
     setFilters((prev) => ({
       ...prev,
-      ...quickFilters[type],
     }));
   };
 
@@ -121,7 +102,6 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onClose }) => {
   const getActiveFilterCount = () => {
     let count = 0;
     if (filters.title) count++;
-    if (filters.is_completed) count++;
     return count;
   };
 
@@ -161,26 +141,10 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onClose }) => {
         <Box sx={{ display: "flex", gap: 1 }}>
           <Button
             size="small"
-            variant={filters.is_completed === "" ? "contained" : "outlined"}
+            variant="contained"
             onClick={() => handleQuickFilter("all")}
           >
             All Tasks
-          </Button>
-          <Button
-            size="small"
-            variant={filters.is_completed === "true" ? "contained" : "outlined"}
-            onClick={() => handleQuickFilter("completed")}
-          >
-            Completed
-          </Button>
-          <Button
-            size="small"
-            variant={
-              filters.is_completed === "false" ? "contained" : "outlined"
-            }
-            onClick={() => handleQuickFilter("pending")}
-          >
-            Pending
           </Button>
         </Box>
       </Box>
@@ -203,20 +167,6 @@ const TaskFilters: React.FC<TaskFiltersProps> = ({ onClose }) => {
             />
           </Grid>
 
-          <Grid item xs={12} sm={6}>
-            <FormControl fullWidth>
-              <InputLabel>Status</InputLabel>
-              <Select
-                value={filters.is_completed}
-                onChange={handleFilterChange("is_completed")}
-                label="Status"
-              >
-                <MenuItem value="">All</MenuItem>
-                <MenuItem value="true">Completed</MenuItem>
-                <MenuItem value="false">Pending</MenuItem>
-              </Select>
-            </FormControl>
-          </Grid>
 
           <Grid item xs={12} sm={6}>
             <FormControl fullWidth>

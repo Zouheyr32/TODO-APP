@@ -3,16 +3,22 @@
  * API service for all task-related operations
  */
 
-import { api, ApiResponse } from './api';
-import { Task, TaskCreate, TaskUpdate, TaskListResponse, TaskSearchParams } from '@/store/slices/tasksSlice';
+import { api, ApiResponse } from "./api";
+import {
+  Task,
+  TaskCreate,
+  TaskUpdate,
+  TaskListResponse,
+  TaskSearchParams,
+} from "@/store/slices/tasksSlice";
 
 // Task API endpoints
 const TASK_ENDPOINTS = {
-  TASKS: '/tasks',
-  SEARCH: '/tasks/search',
-  BULK_DELETE: '/tasks/bulk',
-  COMPLETED: '/tasks/completed/list',
-  PENDING: '/tasks/pending/list',
+  TASKS: "/tasks",
+  SEARCH: "/tasks/search",
+  BULK_DELETE: "/tasks/bulk",
+  COMPLETED: "/tasks/completed/list",
+  PENDING: "/tasks/pending/list",
 } as const;
 
 // Task Service Class
@@ -20,7 +26,9 @@ export class TaskService {
   /**
    * Get all tasks with pagination
    */
-  static async getTasks(params: { skip?: number; limit?: number } = {}): Promise<TaskListResponse> {
+  static async getTasks(
+    params: { skip?: number; limit?: number } = {}
+  ): Promise<TaskListResponse> {
     const { skip = 0, limit = 100 } = params;
     const response = await api.get<TaskListResponse>(
       `${TASK_ENDPOINTS.TASKS}/?skip=${skip}&limit=${limit}`
@@ -48,7 +56,10 @@ export class TaskService {
    * Update an existing task
    */
   static async updateTask(taskId: number, taskData: TaskUpdate): Promise<Task> {
-    const response = await api.put<Task>(`${TASK_ENDPOINTS.TASKS}/${taskId}`, taskData);
+    const response = await api.put<Task>(
+      `${TASK_ENDPOINTS.TASKS}/${taskId}`,
+      taskData
+    );
     return response.data;
   }
 
@@ -62,10 +73,12 @@ export class TaskService {
   /**
    * Bulk delete multiple tasks
    */
-  static async bulkDeleteTasks(taskIds: number[]): Promise<{ deleted_count: number; message: string }> {
-    const response = await api.delete<{ deleted_count: number; message: string }>(
+  static async bulkDeleteTasks(
+    taskIds: number[]
+  ): Promise<{ deleted_count: number; message: string }> {
+    const response = await api.post<{ deleted_count: number; message: string }>(
       TASK_ENDPOINTS.BULK_DELETE,
-      { data: { task_ids: taskIds } }
+      { task_ids: taskIds }
     );
     return response.data;
   }
@@ -73,13 +86,18 @@ export class TaskService {
   /**
    * Search and filter tasks
    */
-  static async searchTasks(searchParams: TaskSearchParams): Promise<TaskListResponse> {
+  static async searchTasks(
+    searchParams: TaskSearchParams
+  ): Promise<TaskListResponse> {
     const queryParams = new URLSearchParams();
-    
-    if (searchParams.title) queryParams.append('title', searchParams.title);
-    if (searchParams.is_completed !== undefined) queryParams.append('is_completed', searchParams.is_completed.toString());
-    if (searchParams.page) queryParams.append('page', searchParams.page.toString());
-    if (searchParams.size) queryParams.append('size', searchParams.size.toString());
+
+    if (searchParams.title) queryParams.append("title", searchParams.title);
+    if (searchParams.is_completed !== undefined)
+      queryParams.append("is_completed", searchParams.is_completed.toString());
+    if (searchParams.page)
+      queryParams.append("page", searchParams.page.toString());
+    if (searchParams.size)
+      queryParams.append("size", searchParams.size.toString());
 
     const response = await api.get<TaskListResponse>(
       `${TASK_ENDPOINTS.SEARCH}?${queryParams.toString()}`
@@ -90,7 +108,9 @@ export class TaskService {
   /**
    * Get completed tasks
    */
-  static async getCompletedTasks(params: { skip?: number; limit?: number } = {}): Promise<Task[]> {
+  static async getCompletedTasks(
+    params: { skip?: number; limit?: number } = {}
+  ): Promise<Task[]> {
     const { skip = 0, limit = 100 } = params;
     const response = await api.get<Task[]>(
       `${TASK_ENDPOINTS.COMPLETED}?skip=${skip}&limit=${limit}`
@@ -101,7 +121,9 @@ export class TaskService {
   /**
    * Get pending tasks
    */
-  static async getPendingTasks(params: { skip?: number; limit?: number } = {}): Promise<Task[]> {
+  static async getPendingTasks(
+    params: { skip?: number; limit?: number } = {}
+  ): Promise<Task[]> {
     const { skip = 0, limit = 100 } = params;
     const response = await api.get<Task[]>(
       `${TASK_ENDPOINTS.PENDING}?skip=${skip}&limit=${limit}`
@@ -113,14 +135,19 @@ export class TaskService {
    * Restore a deleted task
    */
   static async restoreTask(taskId: number): Promise<Task> {
-    const response = await api.post<Task>(`${TASK_ENDPOINTS.TASKS}/${taskId}/restore`);
+    const response = await api.post<Task>(
+      `${TASK_ENDPOINTS.TASKS}/${taskId}/restore`
+    );
     return response.data;
   }
 
   /**
    * Toggle task completion status
    */
-  static async toggleTaskCompletion(taskId: number, isCompleted: boolean): Promise<Task> {
+  static async toggleTaskCompletion(
+    taskId: number,
+    isCompleted: boolean
+  ): Promise<Task> {
     return this.updateTask(taskId, { is_completed: isCompleted });
   }
 
@@ -134,7 +161,10 @@ export class TaskService {
   /**
    * Update task description
    */
-  static async updateTaskDescription(taskId: number, description: string): Promise<Task> {
+  static async updateTaskDescription(
+    taskId: number,
+    description: string
+  ): Promise<Task> {
     return this.updateTask(taskId, { description });
   }
 }

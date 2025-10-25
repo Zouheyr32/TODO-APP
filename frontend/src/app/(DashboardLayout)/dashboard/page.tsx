@@ -1,6 +1,6 @@
 /**
  * Dashboard Page
- * Main dashboard with metrics and analytics
+ * Main dashboard with metrics and analytics - Spike Admin Style
  */
 
 "use client";
@@ -11,33 +11,15 @@ import {
   Container,
   Typography,
   Grid,
-  Card,
-  CardContent,
   Button,
   Alert,
   CircularProgress,
   Chip,
-  IconButton,
+  Stack,
 } from "@mui/material";
-import {
-  Refresh as RefreshIcon,
-  TrendingUp as TrendingUpIcon,
-  TrendingDown as TrendingDownIcon,
-  CheckCircle as CheckIcon,
-  RadioButtonUnchecked as UncheckIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-} from "@mui/icons-material";
-import {
-  useDashboardMetrics,
-  useTaskStatistics,
-  useCompletionRate,
-} from "@/hooks";
+import { Refresh as RefreshIcon } from "@mui/icons-material";
+import { useDashboardMetrics, useTaskStatistics } from "@/hooks";
 import MetricsCards from "./components/MetricsCards";
-import TaskStatsChart from "./components/TaskStatsChart";
-import RecentTasks from "./components/RecentTasks";
-import ProductivityChart from "./components/ProductivityChart";
-import QuickActions from "./components/QuickActions";
 
 const DashboardPage: React.FC = () => {
   const {
@@ -54,11 +36,8 @@ const DashboardPage: React.FC = () => {
     stats,
     loading: statsLoading,
     error: statsError,
-    hasStats,
     loadTaskStats,
   } = useTaskStatistics();
-
-  const { completionRate, status, color } = useCompletionRate();
 
   const [refreshing, setRefreshing] = useState(false);
 
@@ -72,7 +51,8 @@ const DashboardPage: React.FC = () => {
   const handleRefresh = async () => {
     setRefreshing(true);
     try {
-      await Promise.all([refreshMetricsData(), loadTaskStats()]);
+      refreshMetricsData();
+      loadTaskStats();
     } catch (error) {
       console.error("Failed to refresh dashboard data:", error);
     } finally {
@@ -141,30 +121,16 @@ const DashboardPage: React.FC = () => {
       <Container maxWidth="xl">
         {/* Header */}
         <Box sx={{ mb: 4 }}>
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "space-between",
-              alignItems: "center",
-              mb: 2,
-            }}
+          <Stack
+            direction="row"
+            justifyContent="space-between"
+            alignItems="center"
+            mb={2}
           >
             <Typography variant="h4" component="h1">
               Dashboard
             </Typography>
-            <Box sx={{ display: "flex", gap: 1, alignItems: "center" }}>
-              <Chip
-                label={`Completion Rate: ${completionRate?.toFixed(1)}%`}
-                color={
-                  status === "excellent"
-                    ? "success"
-                    : status === "good"
-                    ? "primary"
-                    : "warning"
-                }
-                variant="outlined"
-                sx={{ mr: 1 }}
-              />
+            <Stack direction="row" spacing={2} alignItems="center">
               <Button
                 variant="outlined"
                 startIcon={<RefreshIcon />}
@@ -173,11 +139,11 @@ const DashboardPage: React.FC = () => {
               >
                 {refreshing ? "Refreshing..." : "Refresh"}
               </Button>
-            </Box>
-          </Box>
+            </Stack>
+          </Stack>
 
           {/* Status Indicator */}
-          <Box sx={{ display: "flex", gap: 2, alignItems: "center" }}>
+          <Stack direction="row" spacing={2} alignItems="center">
             <Typography variant="body2" color="text.secondary">
               Last updated: {new Date().toLocaleString()}
             </Typography>
@@ -189,7 +155,7 @@ const DashboardPage: React.FC = () => {
                 variant="outlined"
               />
             )}
-          </Box>
+          </Stack>
         </Box>
 
         {/* Metrics Cards */}
@@ -198,60 +164,6 @@ const DashboardPage: React.FC = () => {
             <MetricsCards metrics={metrics} />
           </Box>
         )}
-
-        {/* Charts and Analytics */}
-        <Grid container spacing={3} sx={{ mb: 4 }}>
-          {/* Task Statistics Chart */}
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Task Statistics
-                </Typography>
-                <TaskStatsChart stats={stats} loading={statsLoading} />
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Productivity Chart */}
-          <Grid item xs={12} lg={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Productivity Overview
-                </Typography>
-                <ProductivityChart metrics={metrics} />
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
-
-        {/* Recent Tasks and Quick Actions */}
-        <Grid container spacing={3}>
-          {/* Recent Tasks */}
-          <Grid item xs={12} lg={8}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Recent Tasks
-                </Typography>
-                <RecentTasks />
-              </CardContent>
-            </Card>
-          </Grid>
-
-          {/* Quick Actions */}
-          <Grid item xs={12} lg={4}>
-            <Card>
-              <CardContent>
-                <Typography variant="h6" gutterBottom>
-                  Quick Actions
-                </Typography>
-                <QuickActions />
-              </CardContent>
-            </Card>
-          </Grid>
-        </Grid>
       </Container>
     </Box>
   );

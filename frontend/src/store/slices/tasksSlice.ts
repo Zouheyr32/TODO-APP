@@ -11,7 +11,6 @@ export interface Task {
   id: number;
   title: string;
   description?: string;
-  is_completed: boolean;
   is_deleted: boolean;
   modification_count: number;
   created_at: string;
@@ -21,13 +20,11 @@ export interface Task {
 export interface TaskCreate {
   title: string;
   description?: string;
-  is_completed?: boolean;
 }
 
 export interface TaskUpdate {
   title?: string;
   description?: string;
-  is_completed?: boolean;
 }
 
 export interface TaskListResponse {
@@ -43,7 +40,6 @@ export interface BulkDeleteRequest {
 
 export interface TaskSearchParams {
   title?: string;
-  is_completed?: boolean;
   page?: number;
   size?: number;
 }

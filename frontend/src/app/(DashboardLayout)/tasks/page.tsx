@@ -20,19 +20,10 @@ import {
   Alert,
   Snackbar,
 } from "@mui/material";
-import {
-  Add as AddIcon,
-  Refresh as RefreshIcon,
-  FilterList as FilterIcon,
-  Delete as DeleteIcon,
-  Edit as EditIcon,
-  CheckCircle as CheckIcon,
-  RadioButtonUnchecked as UncheckIcon,
-} from "@mui/icons-material";
+import { Add as AddIcon, Refresh as RefreshIcon } from "@mui/icons-material";
 import { useTasks, useTaskSelection } from "@/hooks";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
-import TaskFilters from "./components/TaskFilters";
 import BulkActions from "./components/BulkActions";
 import { Task } from "@/store/slices/tasksSlice";
 
@@ -64,7 +55,6 @@ const TasksPage: React.FC = () => {
   // Local state
   const [showForm, setShowForm] = useState(false);
   const [editingTask, setEditingTask] = useState<Task | null>(null);
-  const [showFilters, setShowFilters] = useState(false);
   const [snackbar, setSnackbar] = useState<{
     open: boolean;
     message: string;
@@ -204,13 +194,6 @@ const TasksPage: React.FC = () => {
             <Box sx={{ display: "flex", gap: 1 }}>
               <Button
                 variant="outlined"
-                startIcon={<FilterIcon />}
-                onClick={() => setShowFilters(!showFilters)}
-              >
-                Filters
-              </Button>
-              <Button
-                variant="outlined"
                 startIcon={<RefreshIcon />}
                 onClick={handleRefresh}
                 disabled={loading}
@@ -232,16 +215,6 @@ const TasksPage: React.FC = () => {
             <Chip
               label={`Total: ${total}`}
               color="primary"
-              variant="outlined"
-            />
-            <Chip
-              label={`Completed: ${tasks.filter((t) => t.is_completed).length}`}
-              color="success"
-              variant="outlined"
-            />
-            <Chip
-              label={`Pending: ${tasks.filter((t) => !t.is_completed).length}`}
-              color="warning"
               variant="outlined"
             />
             {selectedTasks.length > 0 && (
@@ -271,15 +244,6 @@ const TasksPage: React.FC = () => {
           >
             {error}
           </Alert>
-        )}
-
-        {/* Filters */}
-        {showFilters && (
-          <Card sx={{ mb: 3 }}>
-            <CardContent>
-              <TaskFilters onClose={() => setShowFilters(false)} />
-            </CardContent>
-          </Card>
         )}
 
         {/* Bulk Actions */}
