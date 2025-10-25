@@ -14,8 +14,6 @@ import {
   TextField,
   Button,
   Box,
-  FormControlLabel,
-  Switch,
   Typography,
 } from "@mui/material";
 import { Task } from "@/store/slices/tasksSlice";
@@ -30,7 +28,6 @@ interface TaskFormProps {
 interface FormData {
   title: string;
   description: string;
-  is_completed: boolean;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({
@@ -42,7 +39,6 @@ const TaskForm: React.FC<TaskFormProps> = ({
   const [formData, setFormData] = useState<FormData>({
     title: "",
     description: "",
-    is_completed: false,
   });
   const [errors, setErrors] = useState<Partial<FormData>>({});
   const [loading, setLoading] = useState(false);
@@ -53,13 +49,11 @@ const TaskForm: React.FC<TaskFormProps> = ({
       setFormData({
         title: task.title,
         description: task.description || "",
-        is_completed: task.is_completed,
       });
     } else {
       setFormData({
         title: "",
         description: "",
-        is_completed: false,
       });
     }
     setErrors({});
@@ -68,8 +62,7 @@ const TaskForm: React.FC<TaskFormProps> = ({
   // Handle input changes
   const handleChange =
     (field: keyof FormData) => (event: React.ChangeEvent<HTMLInputElement>) => {
-      const value =
-        field === "is_completed" ? event.target.checked : event.target.value;
+      const value = event.target.value;
       setFormData((prev) => ({
         ...prev,
         [field]: value,
@@ -178,17 +171,6 @@ const TaskForm: React.FC<TaskFormProps> = ({
               placeholder="Enter task description..."
             />
 
-            {/* Completion Status */}
-            <FormControlLabel
-              control={
-                <Switch
-                  checked={formData.is_completed}
-                  onChange={handleChange("is_completed")}
-                  disabled={loading}
-                />
-              }
-              label="Mark as completed"
-            />
 
             {/* Show additional info for editing */}
             {isEditing && task && (

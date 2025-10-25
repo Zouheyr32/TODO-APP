@@ -1,107 +1,100 @@
-import React from "react";
-import { usePathname } from "next/navigation";
-import { Box, Typography } from "@mui/material";
+"use client";
 import {
-    Logo,
-    Sidebar as MUI_Sidebar,
-    Menu,
-    MenuItem,
-    Submenu,
-} from "react-mui-sidebar";
-
-import Menuitems from "./MenuItems";
-import { Icon } from "@iconify/react";
+  styled,
+  Box,
+  List,
+  ListItem,
+  ListItemButton,
+  ListItemIcon,
+  ListItemText,
+  Typography,
+} from "@mui/material";
+import { usePathname } from "next/navigation";
 import Link from "next/link";
-import { Upgrade } from "./Updrade";
-import theme from "@/utils/theme";
+import { IconHome, IconChecklist } from "@tabler/icons-react";
+import Logo from "../shared/logo/Logo";
 
-const renderMenuItems = (items: any[], pathDirect: string) => {
+const StyledListItemButton = styled(ListItemButton)(({ theme }) => ({
+  margin: "4px 8px",
+  borderRadius: "8px",
+  "&.Mui-selected": {
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
+    "&:hover": {
+      backgroundColor: theme.palette.primary.dark,
+    },
+    "& .MuiListItemIcon-root": {
+      color: theme.palette.primary.contrastText,
+    },
+  },
+  "&:hover": {
+    backgroundColor: theme.palette.action.hover,
+  },
+}));
 
-
-
-    return items.map((item) => {
-        if (item.subheader) {
-            // Display Subheader
-            return (
-                <Box sx={{ margin: "0 -24px" }} key={item.subheader}>
-                    <Menu
-                        subHeading={item.subheader}
-                        key={item.subheader}
-
-                    ><></></Menu>
-                </Box>
-            );
-        }
-
-        //If the item has children (submenu)
-        if (item.children) {
-            return (
-                <Submenu
-                    key={item.id}
-                    title={item.title}
-                    icon={
-                        item.icon ? (
-                            <Icon icon={"solar:" + item.icon} width="24" height="24" />
-                        ) : (
-                            <Icon icon="mdi:circle" width="6" height="6" />
-                        )
-                    }
-                >
-                    {renderMenuItems(item.children, pathDirect)}
-                </Submenu>
-            );
-        }
-
-        // If the item has no children, render a MenuItem
-
-        return (
-            <MenuItem
-                key={item.id}
-                isSelected={pathDirect === item?.href}
-                icon={
-                    item.icon ? (
-                        <Icon icon={"solar:" + item.icon} width="24" height="24" />
-                    ) : (
-                        <Icon icon="mdi:circle" width="6" height="6" />
-                    )
-                }
-                component="div"
-                link={item.href && item.href !== "" ? item.href : undefined}
-
-                badge={item.chip ? true : false}
-                badgeContent={item.chip || ""}
-                badgeColor='secondary'
-                badgeTextColor="#0085db"
-                disabled={item.disabled}
-            >
-
-                <Link href={item.href} target={item.href && item.href.startsWith("https") ? "_blank" : "_self"}>
-                    <Typography color={pathDirect === item?.href ? '#fff' : 'inherit'}>
-                        {item.title}</Typography>
-                </Link>
-            </MenuItem>
-
-
-        );
-    });
-};
+const StyledListItemIcon = styled(ListItemIcon)(() => ({
+  minWidth: "40px",
+}));
 
 const SidebarItems = () => {
-    const pathname = usePathname();
-    const pathDirect = pathname;
+  const pathname = usePathname();
 
-    return (
-        <Box sx={{ px: "20px", overflowX: 'hidden' }}>
-            <MUI_Sidebar width={"100%"} showProfile={false} themeColor={"#0085db"} themeSecondaryColor={'#0085db1a'}>
-                <Box sx={{ margin: "0 -24px" }}>
-                    <Logo img="/images/logos/logo-dark.svg" component={Link} href="/" >Spike</Logo>
-                </Box>
-                {renderMenuItems(Menuitems, pathDirect)}
-            </MUI_Sidebar>
-            <Upgrade />
-        </Box>
-    );
+  const menuItems = [
+    {
+      title: "Dashboard",
+      icon: IconHome,
+      href: "/dashboard",
+    },
+    {
+      title: "Tasks",
+      icon: IconChecklist,
+      href: "/tasks",
+    },
+  ];
+
+  return (
+    <Box sx={{ height: "100%", display: "flex", flexDirection: "column" }}>
+      {/* Logo */}
+      <Box sx={{ p: 2, borderBottom: 1, borderColor: "divider" }}>
+        <Logo />
+      </Box>
+
+      {/* Menu Items */}
+      <Box sx={{ flexGrow: 1, overflow: "auto" }}>
+        <List sx={{ px: 1, py: 2 }}>
+          {menuItems.map((item) => {
+            const Icon = item.icon;
+            const isActive = pathname === item.href;
+
+            return (
+              <ListItem key={item.title} disablePadding>
+                <Link
+                  href={item.href}
+                  style={{ textDecoration: "none", width: "100%" }}
+                >
+                  <StyledListItemButton selected={isActive}>
+                    <StyledListItemIcon>
+                      <Icon size={20} />
+                    </StyledListItemIcon>
+                    <ListItemText
+                      primary={
+                        <Typography
+                          variant="body2"
+                          fontWeight={isActive ? 600 : 400}
+                        >
+                          {item.title}
+                        </Typography>
+                      }
+                    />
+                  </StyledListItemButton>
+                </Link>
+              </ListItem>
+            );
+          })}
+        </List>
+      </Box>
+    </Box>
+  );
 };
 
 export default SidebarItems;
-

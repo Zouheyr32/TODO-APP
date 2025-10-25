@@ -26,8 +26,6 @@ import {
 import {
   Edit as EditIcon,
   Delete as DeleteIcon,
-  CheckCircle as CheckIcon,
-  RadioButtonUnchecked as UncheckIcon,
 } from "@mui/icons-material";
 import { Task } from "@/store/slices/tasksSlice";
 import { format } from "date-fns";
@@ -97,15 +95,6 @@ const TaskList: React.FC<TaskListProps> = ({
     }
   };
 
-  // Get status color
-  const getStatusColor = (isCompleted: boolean) => {
-    return isCompleted ? "success" : "default";
-  };
-
-  // Get status text
-  const getStatusText = (isCompleted: boolean) => {
-    return isCompleted ? "Completed" : "Pending";
-  };
 
   if (loading) {
     return (
@@ -143,7 +132,6 @@ const TaskList: React.FC<TaskListProps> = ({
               </TableCell>
               <TableCell>Title</TableCell>
               <TableCell>Description</TableCell>
-              <TableCell>Status</TableCell>
               <TableCell>Modified</TableCell>
               <TableCell>Created</TableCell>
               <TableCell align="center">Actions</TableCell>
@@ -191,14 +179,6 @@ const TaskList: React.FC<TaskListProps> = ({
                   >
                     {task.description || "No description"}
                   </Typography>
-                </TableCell>
-                <TableCell>
-                  <Chip
-                    label={getStatusText(task.is_completed)}
-                    color={getStatusColor(task.is_completed)}
-                    size="small"
-                    icon={task.is_completed ? <CheckIcon /> : <UncheckIcon />}
-                  />
                 </TableCell>
                 <TableCell>
                   <Typography variant="body2" color="text.secondary">

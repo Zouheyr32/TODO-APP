@@ -19,7 +19,6 @@ import {
   selectMetricsLoading,
   selectMetricsError,
   selectMetricsLastUpdated,
-  selectCompletionRate,
   selectTasksSummary,
 } from '@/store/slices/metricsSlice';
 
@@ -33,7 +32,6 @@ export const useMetrics = () => {
   const loading = useAppSelector(selectMetricsLoading);
   const error = useAppSelector(selectMetricsError);
   const lastUpdated = useAppSelector(selectMetricsLastUpdated);
-  const completionRate = useAppSelector(selectCompletionRate);
   const tasksSummary = useAppSelector(selectTasksSummary);
 
   // Actions
@@ -53,7 +51,7 @@ export const useMetrics = () => {
     dispatch(clearError());
   }, [dispatch]);
 
-  const updateMetricsOptimisticallyAction = useCallback((type: 'task_created' | 'task_completed' | 'task_deleted' | 'task_updated', taskId?: number) => {
+  const updateMetricsOptimisticallyAction = useCallback((type: 'task_created' | 'task_modified' | 'task_deleted', taskId?: number) => {
     dispatch(updateMetricsOptimistically({ type, taskId }));
   }, [dispatch]);
 
@@ -68,7 +66,6 @@ export const useMetrics = () => {
     loading,
     error,
     lastUpdated,
-    completionRate,
     tasksSummary,
     
     // Actions
@@ -127,33 +124,19 @@ export const useTaskStatistics = () => {
   };
 };
 
-// Hook for completion rate tracking
+// Hook for completion rate tracking (simplified for new metrics structure)
 export const useCompletionRate = () => {
-  const { completionRate, metrics } = useMetrics();
+  const { metrics } = useMetrics();
 
-  const getCompletionStatus = useCallback(() => {
-    if (!completionRate) return 'no-data';
-    if (completionRate >= 80) return 'excellent';
-    if (completionRate >= 60) return 'good';
-    if (completionRate >= 40) return 'fair';
-    return 'poor';
-  }, [completionRate]);
-
-  const getCompletionColor = useCallback(() => {
-    const status = getCompletionStatus();
-    switch (status) {
-      case 'excellent': return '#4caf50'; // Green
-      case 'good': return '#8bc34a'; // Light green
-      case 'fair': return '#ff9800'; // Orange
-      case 'poor': return '#f44336'; // Red
-      default: return '#9e9e9e'; // Grey
-    }
-  }, [getCompletionStatus]);
+  // Since we no longer track completion, return default values
+  const completionRate = 0;
+  const status = 'no-data';
+  const color = '#9e9e9e'; // Grey
 
   return {
     completionRate,
-    status: getCompletionStatus(),
-    color: getCompletionColor(),
+    status,
+    color,
     metrics,
   };
 };

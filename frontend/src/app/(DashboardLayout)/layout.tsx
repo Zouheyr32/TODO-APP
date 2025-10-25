@@ -1,11 +1,7 @@
 "use client";
 import { styled, Container, Box } from "@mui/material";
-import React, { useState } from "react";
-import Header from "@/app/(DashboardLayout)/layout/header/Header";
-import Sidebar from "@/app/(DashboardLayout)/layout/sidebar/Sidebar";
-
-import Topbar from "./layout/header/Topbar";
-import theme from "@/utils/theme";
+import React from "react";
+import Sidebar from "./layout/sidebar/Sidebar";
 import Footer from "./layout/footer/page";
 
 const MainWrapper = styled("div")(() => ({
@@ -17,69 +13,38 @@ const MainWrapper = styled("div")(() => ({
 const PageWrapper = styled("div")(() => ({
   display: "flex",
   flexGrow: 1,
-  paddingBottom: "25px",
   flexDirection: "column",
   backgroundColor: "transparent",
+  minHeight: "100vh",
 }));
-
-
-
 
 export default function RootLayout({
   children,
-}: {
+}: Readonly<{
   children: React.ReactNode;
-}) {
-
+}>) {
   return (
     <MainWrapper className="mainwrapper">
+      {/* Sidebar */}
+      <Sidebar />
 
       <PageWrapper className="page-wrapper">
-        <Topbar />
-
-
-        {/* ------------------------------------------- */}
-        {/* Sidebar */}
-        {/* ------------------------------------------- */}
-
-        <Sidebar
-        />
-        {/* ------------------------------------------- */}
-        {/* PageContent */}
-        {/* ------------------------------------------- */}
-        <Box
+        {/* Page Content */}
+        <Container
+          maxWidth="xl"
           sx={{
-
-            [theme.breakpoints.up("lg")]: {
-              marginLeft: '270px',
-            },
+            paddingTop: "30px",
+            paddingBottom: "30px",
+            minHeight: "100vh",
+            flexGrow: 1,
           }}
         >
-          {/* ------------------------------------------- */}
-          {/* Header */}
-          {/* ------------------------------------------- */}
-          <Header />
-          <Container
-            sx={{
-              paddingTop: "20px",
-              maxWidth: "1200px",
-              minHeight: 'calc(100vh - 229px)'
-            }}
-          >
+          <Box>{children}</Box>
+        </Container>
 
-
-            {/* ------------------------------------------- */}
-            {/* Page Route */}
-            {/* ------------------------------------------- */}
-            <Box>{children}</Box>
-
-
-
-          </Container>
-          <Footer />
-        </Box>
+        {/* Footer */}
+        <Footer />
       </PageWrapper>
     </MainWrapper>
   );
 }
-

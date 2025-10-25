@@ -1,95 +1,57 @@
-import { IconButton, Box, AppBar, Menu, MenuItem, Typography, useMediaQuery, Toolbar, styled, Stack, Button, Badge } from '@mui/material';
-import Profile from './Profile';
-import { useEffect, useState, useContext } from 'react';
-import { Icon } from '@iconify/react';
-import { DashboardContext } from '@/app/context/DashboardContext';
-import { IconBellRinging } from "@tabler/icons-react";
-import Notification from './Notification'
+"use client";
+import {
+  styled,
+  AppBar,
+  Toolbar,
+  Box,
+  IconButton,
+  Typography,
+} from "@mui/material";
+import { Menu as MenuIcon } from "@mui/icons-material";
+import { useSelector, useDispatch } from "react-redux";
+import { RootState } from "@/store";
+import { toggleLeftDrawer } from "@/store/slices/customizerSlice";
+import Profile from "./Profile";
+
+const HeaderWrapper = styled(AppBar)(({ theme }) => ({
+  backgroundColor: theme.palette.background.paper,
+  color: theme.palette.text.primary,
+  boxShadow: "0 1px 3px rgba(0, 0, 0, 0.12)",
+  borderBottom: `1px solid ${theme.palette.divider}`,
+}));
 
 const Header = () => {
-  const [_height, setHeight] = useState('0px');
+  const dispatch = useDispatch();
+  const leftDrawerOpened = useSelector(
+    (state: RootState) => state.customizer.opened
+  );
 
-
-
-
-
-
-  const AppBarStyled = styled(AppBar)(({ theme }) => ({
-    boxShadow: 'none',
-    background: theme.palette.background.paper,
-    justifyContent: 'center',
-    backdropFilter: 'blur(4px)',
-    [theme.breakpoints.up('lg')]: {
-      minHeight: '70px',
-    },
-    zIndex: 'unset'
-  }));
-  const ToolbarStyled = styled(Toolbar)(({ theme }) => ({
-    width: '100%',
-    color: theme.palette.text.secondary,
-  }));
-
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 992) {
-        setHeight('0px');
-      }
-    };
-    window.addEventListener('resize', handleResize);
-
-    // Cleanup function to remove event listener on unmount
-    return () => window.removeEventListener('resize', handleResize);
-  }, []);
-
-  const { isMobileSidebar, setIsMobileSidebar } = useContext(DashboardContext);
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event: any) => {
-    setAnchorEl(event.currentTarget);
+  const handleLeftDrawerToggle = () => {
+    dispatch(toggleLeftDrawer());
   };
-
-  const handleClose = () => {
-    setAnchorEl(null);
-  };
-
 
   return (
-    <>
-      <AppBarStyled position="sticky" color="default">
-        <ToolbarStyled>
-          <IconButton
-            color="inherit"
-            aria-label="menu"
-            onClick={() => setIsMobileSidebar(!isMobileSidebar)}
+    <HeaderWrapper position="sticky" elevation={0}>
+      <Toolbar>
+        <IconButton
+          color="inherit"
+          aria-label="open drawer"
+          onClick={handleLeftDrawerToggle}
+          edge="start"
+          sx={{ mr: 2 }}
+        >
+          <MenuIcon />
+        </IconButton>
 
-            sx={{
-              display: {
-                lg: "none",
-                xs: "inline",
-              },
-            }}
-          >
-            <Icon icon="solar:list-bold" height={20} />
-          </IconButton>
+        <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
+          TODO App
+        </Typography>
 
-          <Notification />
-
-
-          <Box flexGrow={1} />
-          <>
-            <Stack spacing={2} direction="row" alignItems="center">
-              <Button variant="contained" color="primary" target="_blank" href="https://www.wrappixel.com/templates/spike-nextjs-admin-template/?ref=376#demos">
-                Check Pro Template
-              </Button>
-              <Profile />
-            </Stack>
-          </>
-
-
-        </ToolbarStyled>
-      </AppBarStyled>
-    </>
+        <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+          <Profile />
+        </Box>
+      </Toolbar>
+    </HeaderWrapper>
   );
 };
 
