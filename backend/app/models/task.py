@@ -14,7 +14,6 @@ class Task(Base):
         id: Primary key, auto-incrementing integer
         title: Task title (required, max 255 characters)
         description: Task description (optional, text field)
-        is_completed: Boolean flag indicating if task is completed
         is_deleted: Boolean flag for soft delete functionality
         modification_count: Integer tracking number of times task was modified
         created_at: Timestamp when task was created
