@@ -361,7 +361,6 @@ Returns detailed statistics including total created, total modified, total delet
 | created_at         | DateTime    | Task creation timestamp                      |
 | updated_at         | DateTime    | Last update timestamp                        |
 
-**Note:** The `is_completed` field has been removed. Tasks no longer track completion status.
 
 ## 🏗️ Architecture
 
