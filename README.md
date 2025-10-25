@@ -84,7 +84,7 @@ TODO-APP/
 - **Modification Tracking** - Track how many times a task has been modified
 - **Database Migrations** - Alembic for database schema management
 - **Data Validation** - Pydantic schemas for request/response validation
-- **Metrics API** - Analytics endpoints for dashboard data
+- **Dashboard Analytics** - Metrics endpoints for Total, Modified, and Deleted task counts
 - **Error Handling** - Comprehensive error responses
 - **CORS Support** - Cross-origin resource sharing configuration
 
@@ -92,8 +92,7 @@ TODO-APP/
 
 - **Task Management** - Create, read, update, delete tasks
 - **Bulk Operations** - Select and delete multiple tasks
-- **Search & Filtering** - Advanced task filtering capabilities
-- **Dashboard Analytics** - Visual metrics and productivity tracking
+- **Dashboard Analytics** - Visual metrics for Total, Modified, and Deleted tasks
 - **Responsive Design** - Mobile-friendly interface
 - **Real-time Updates** - Optimistic UI updates
 - **Error Handling** - User-friendly error messages
@@ -138,33 +137,29 @@ These scripts will automatically:
 
 #### After Running Setup Scripts:
 
-1. **Configure Database** (if not already done):
+The setup scripts will automatically:
 
-   ```bash
-   # Create MySQL database
-   mysql -u root -p
-   CREATE DATABASE todo_db;
-   ```
+- Prompt for MySQL credentials
+- Create the MySQL database if it doesn't exist
+- Set up backend and frontend environments
+- Install all dependencies
+- Create configuration files (.env)
+- Run database migrations
 
-2. **Edit Environment Files**:
-
-   - Backend: Update `backend/.env` with your database credentials
-   - Frontend: Update `frontend/.env.local` with your API URL (default: http://localhost:8000)
-
-3. **Start the Application**:
+1. **Start the Application**:
 
    ```bash
    # Terminal 1 - Start Backend
    cd backend
    source venv/bin/activate  # Windows: venv\Scripts\activate
-   uvicorn main:app --reload
+   python main.py
 
    # Terminal 2 - Start Frontend
    cd frontend
    npm run dev
    ```
 
-4. **Access the Application**:
+2. **Access the Application**:
    - Frontend: http://localhost:3000
    - Backend API: http://localhost:8000
    - API Documentation: http://localhost:8000/docs
@@ -197,9 +192,10 @@ If you prefer to set up manually or the scripts don't work, follow the steps bel
 
 4. **Configure environment variables**
 
-   ```bash
-   cp .env.example .env
-   # Edit .env with your database credentials
+   Create a `.env` file in the backend directory:
+
+   ```
+   DATABASE_URL=mysql+pymysql://username:password@localhost:3306/todo_db
    ```
 
 5. **Setup database**
@@ -207,7 +203,8 @@ If you prefer to set up manually or the scripts don't work, follow the steps bel
    ```bash
    # Create MySQL database
    mysql -u root -p
-   CREATE DATABASE todo_db;
+   CREATE DATABASE IF NOT EXISTS todo_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
+   EXIT;
 
    # Run migrations
    alembic upgrade head
@@ -274,8 +271,7 @@ Content-Type: application/json
 
 {
   "title": "Task Title",
-  "description": "Task Description",
-  "is_completed": false
+  "description": "Task Description"
 }
 ```
 
@@ -287,8 +283,7 @@ Content-Type: application/json
 
 {
   "title": "Updated Title",
-  "description": "Updated Description",
-  "is_completed": true
+  "description": "Updated Description"
 }
 ```
 
@@ -301,7 +296,7 @@ DELETE /tasks/{task_id}
 #### Bulk Delete Tasks
 
 ```http
-DELETE /tasks/bulk
+POST /tasks/bulk
 Content-Type: application/json
 
 {
@@ -312,7 +307,7 @@ Content-Type: application/json
 #### Search Tasks
 
 ```http
-GET /tasks/search?title=search_term&is_completed=true&page=1&size=10
+GET /tasks/search?title=search_term&page=1&size=10
 ```
 
 ### Metrics Endpoints
@@ -323,11 +318,33 @@ GET /tasks/search?title=search_term&is_completed=true&page=1&size=10
 GET /metrics
 ```
 
+Returns:
+
+- **total_tasks**: Total number of active (non-deleted) tasks
+- **modified_tasks**: Number of tasks edited at least once (modification_count > 0)
+- **deleted_tasks**: Number of soft-deleted tasks
+
 #### Get Task Statistics
 
 ```http
 GET /metrics/stats
 ```
+
+Returns detailed statistics including total created, total modified, total deleted, and average modifications per task.
+
+## Task Model Schema
+
+| Field              | Type        | Description                                  |
+| ------------------ | ----------- | -------------------------------------------- |
+| id                 | Integer     | Primary key, auto-increment                  |
+| title              | String(255) | Task title (required)                        |
+| description        | Text        | Task description (optional)                  |
+| is_deleted         | Boolean     | Soft delete flag (default: false)            |
+| modification_count | Integer     | Number of times task was edited (default: 0) |
+| created_at         | DateTime    | Task creation timestamp                      |
+| updated_at         | DateTime    | Last update timestamp                        |
+
+**Note:** The `is_completed` field has been removed. Tasks no longer track completion status.
 
 ## 🏗️ Architecture
 
